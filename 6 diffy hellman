@@ -1,0 +1,50 @@
+import random
+
+def is_prime(num):
+    """Checks if a number is prime."""
+    if num <= 1:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+def find_large_prime():
+    """Finds a large prime number."""
+    while True:
+        prime_candidate = random.randint(100, 1000)
+        if is_prime(prime_candidate):
+            return prime_candidate
+
+def diffie_hellman():
+    # Step 1: Choose a large prime number p and a generator g.
+    p = find_large_prime()
+    g = 2  # common choice for g
+
+    # Step 2: Generate private keys for Alice and Bob.
+    a_private = random.randint(1, p - 1)  # Alice's private key
+    b_private = random.randint(1, p - 1)  # Bob's private key
+
+    # Step 3: Calculate public keys.
+    A_public = pow(g, a_private, p)  # Alice's public key
+    B_public = pow(g, b_private, p)  # Bob's public key
+
+    # Step 4: Generate the shared secret keys.
+    shared_secret_alice = pow(B_public, a_private, p)  # Alice's secret
+    shared_secret_bob = pow(A_public, b_private, p)     # Bob's secret
+
+    return p, g, A_public, B_public, shared_secret_alice, shared_secret_bob
+
+if __name__ == "__main__":
+    p, g, A_public, B_public, shared_secret_alice, shared_secret_bob = diffie_hellman()
+    print(f"Prime p: {p}")
+    print(f"Generator g: {g}")
+    print(f"Alice's public key: {A_public}")
+    print(f"Bob's public key: {B_public}")
+    print(f"Alice's shared secret: {shared_secret_alice}")
+    print(f"Bob's shared secret: {shared_secret_bob}")
+
+    if shared_secret_alice == shared_secret_bob:
+        print("Key exchange successful, both share the same secret.")
+    else:
+        print("Key exchange failed!")
